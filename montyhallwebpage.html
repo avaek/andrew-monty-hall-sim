@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Andrew and ChatGPT's Monty Hall Simulation</title>
+    <script>
+function simulateMontyHall(numSimulations) {
+    let switchWins = 0;
+    let stayWins = 0;
+
+    for (let i = 0; i < numSimulations; i++) {
+        // Randomly choose the door with the car behind it
+        const carDoor = Math.floor(Math.random() * 3);
+
+        // Contestant's initial choice
+        const contestantChoice = Math.floor(Math.random() * 3);
+
+        // Monty's door choice that doesn't reveal the car or the contestant's choice
+        let montyDoor;
+        do {
+            montyDoor = Math.floor(Math.random() * 3);
+        } while (montyDoor === carDoor || montyDoor === contestantChoice);
+
+        // Switching doors
+        let switchDoor;
+        do {
+            switchDoor = Math.floor(Math.random() * 3);
+        } while (switchDoor === montyDoor || switchDoor === contestantChoice);
+
+        // Check if contestant wins by switching
+        if (switchDoor === carDoor) {
+            switchWins++;
+        }
+
+        // Check if contestant wins by staying
+        if (contestantChoice === carDoor) {
+            stayWins++;
+        }
+    }
+
+    const switchWinPercentage = (switchWins / numSimulations) * 100;
+    const stayWinPercentage = (stayWins / numSimulations) * 100;
+
+    // Format switchWinPercentage based on whether it's a whole number or not
+    const formattedSwitchWinPercentage = switchWinPercentage % 1 === 0 ? switchWinPercentage.toFixed(0) : switchWinPercentage.toFixed(2);
+
+    // Format stayWinPercentage based on whether it's a whole number or not
+    const formattedStayWinPercentage = stayWinPercentage % 1 === 0 ? stayWinPercentage.toFixed(0) : stayWinPercentage.toFixed(2);
+
+
+    // Update the HTML to display the results
+        document.getElementById("results").innerHTML = `
+            <p>Switching doors wins ${formattedSwitchWinPercentage}% of the time (${switchWins} / ${numSimulations}).</p>
+            <p>Staying with the original choice wins ${formattedStayWinPercentage}% of the time (${stayWins} / ${numSimulations}).</p>
+        `;
+}
+
+function runSimulation() {
+    const numSimulations = parseInt(document.getElementById("numSimulations").value);
+        simulateMontyHall(numSimulations);
+    }
+</script>
+</head>
+<body>
+    <h1>Andrew and ChatGPT's Monty Hall Simulation</h1>
+    <p>This tool allows you to simulate the Monty Hall problem. Enter the number of times you'd like to simulate this below:</p>
+    <input type="number" id="numSimulations" min="1" value="1000">
+    <button onclick="runSimulation()">Run Simulation</button>
+    
+    <!-- Results will be displayed here -->
+    <div id="results"></div>
+</body>
+</html>
